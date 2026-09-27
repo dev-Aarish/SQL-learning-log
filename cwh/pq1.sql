@@ -1,0 +1,16 @@
+SELECT *
+FROM users
+WHERE salary>60000
+ORDER BY created_at DESC
+LIMIT 5;
+
+SELECT *
+FROM users
+ORDER BY salary DESC;
+
+SELECT *
+FROM users
+WHERE salary BETWEEN 50000 AND 70000;
+
+SELECT *
+FROM users;
