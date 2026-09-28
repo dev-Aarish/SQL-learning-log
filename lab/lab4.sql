@@ -50,3 +50,25 @@ WHERE customerid IN(
     SELECT customerid
     FROM orders
 );
+
+#GRP2
+-- 37. List the names of customers who have not placed an order
+
+SELECT DISTINCT *
+FROM customer AS c, ORDERS AS o
+WHERE c.customerid=o.customerid;
+
+SELECT customername
+FROM customer AS c LEFT JOIN orders AS o
+ON c.customerid=o.customerid
+WHERE o.customerid IS NULL;
+
+SELECT customername
+FROM customer
+WHERE customerid NOT IN(
+    SELECT customerid
+    FROM orders
+);
+
+SELECT *
+FROM customer;
