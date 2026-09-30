@@ -47,3 +47,20 @@ WHERE customerid=(
     FROM customer
     WHERE customername='Value Furniture'
 );
+
+-- 41. List every order which includes a request for a product made of "Oak"
+SELECT o.*
+FROM orders AS o
+WHERE o.orderno IN(
+    SELECT r.orderno
+    FROM requests AS r
+    WHERE r.productno IN (
+        SELECT productno
+        FROM product
+        WHERE productfinish='Oak'
+    )
+);
+
+SELECT o.*
+FROM orders AS o, requests AS r, product AS p
+WHERE p.productfinish='Oak' AND r.productno=p.productno AND o.orderno=r.orderno;
