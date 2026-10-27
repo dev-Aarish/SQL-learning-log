@@ -3,6 +3,10 @@ SELECT DISTINCT *
 FROM product
 WHERE productdesc LIKE '%Bookcase%';
 
+SELECT DISTINCT *
+FROM product
+WHERE productdesc LIKE "____Bookcase%";
+
 -- 12. List the products if they are increased by 10%
 SELECT productdesc, unitprice, unitprice*1.1 AS inc_unitprice
 FROM product;
@@ -32,11 +36,15 @@ GROUP BY productfinish
 HAVING AVG(qtyonhand)>3 AND MIN(unitprice)>200;
 
 -- 16. List product names having maximum quantity on hand
-SELECT productdesc
-FROM product
-GROUP BY productdesc
-HAVING MAX(qtyonhand)
-LIMIT 1;
+
+#SELECT productdesc
+#FROM product
+#GROUP BY productdesc
+#HAVING MAX(qtyonhand)
+#LIMIT 1;
+#The above query returns the very first element, any non-zero
+#qty passes this limit 1 just gives the very first element 
+#of the table.
 
 SELECT *
 FROM product
@@ -101,6 +109,14 @@ WHERE p1.unitprice> ALL(
     FROM product AS p2
     WHERE p1.productfinish<>p2.productfinish
     GROUP BY p2.productfinish
+);
+
+SELECT *
+FROM product AS p1
+WHERE unitprice>(
+    SELECT MAX(unitprice)
+    FROM product AS p2
+    WHERE p1.productfinish<>p2.productfinish
 );
 
 SELECT *
