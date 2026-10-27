@@ -21,6 +21,14 @@ SELECT *
 FROM product
 WHERE unitprice>200.00 AND qtyonhand BETWEEN 1 AND 5;
 
+SELECT *
+FROM product
+WHERE unitprice>200 AND qtyonhand>=1 and qtyonhand<=5;
+
+SELECT *
+FROM product
+WHERE unitprice>200 AND qtyonhand IN (1,2,3,4,5);
+
 -- 6. List all products with finish='Oak'
 SELECT *
 FROM product
@@ -30,6 +38,10 @@ WHERE productfinish='Oak';
 SELECT *
 FROM product 
 WHERE productfinish IN ('Oak','Walnut');
+
+SELECT *
+FROM product
+WHERE productfinish='Oak' OR productfinish='Walnut';
 
 -- 8. List all products with finish='Oak' or unitprice>=300
 SELECT *

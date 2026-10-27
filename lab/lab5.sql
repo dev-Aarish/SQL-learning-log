@@ -64,3 +64,11 @@ WHERE o.orderno IN(
 SELECT o.*
 FROM orders AS o, requests AS r, product AS p
 WHERE p.productfinish='Oak' AND r.productno=p.productno AND o.orderno=r.orderno;
+
+-- 42. List every order which includes request only for products made of "Oak"
+SELECT orderno
+FROM requests AS r, product AS p
+WHERE p.productfinish="Oak" AND r.productno=p.productno;
+
+SELECT *
+FROM requests;
