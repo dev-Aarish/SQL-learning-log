@@ -28,8 +28,8 @@ WHERE unitprice>200.00
 GROUP BY productfinish
 HAVING AVG(qtyonhand)>3;
 #the above query searches only among the query whose unitprice>200
-#the query below looks over the entire productfinish and checks both
-#the conditions for it
+#the query below looks over the all the products of a productfinish 
+#and checks both the conditions for it
 SELECT productfinish
 FROM product
 GROUP BY productfinish
