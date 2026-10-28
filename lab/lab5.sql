@@ -114,4 +114,63 @@ AND NOT EXISTS(
     AND r2.productno=p.productno
     AND p.productfinish<>'Oak'
 );
-#Sir's way of doing it apparently
+#Sir's way of doing it
+
+-- 43. List the total quantity ordered for every product finish
+
+SELECT productfinish, SUM(r.quantity) AS total_qty_ordered
+FROM product p, requests r
+WHERE p.productno=r.productno
+GROUP BY productfinish
+UNION
+SELECT DISTINCT productfinish, 0 AS total_qty_ordered
+FROM product
+WHERE productfinish NOT IN(
+    SELECT DISTINCT p2.productfinish
+    FROM product p2, requests r2
+    WHERE p2.productno=r2.productno
+);
+
+SELECT productfinish, COALESCE(SUM(r.quantity),0) as total_qty_ordered
+FROM product as p LEFT JOIN requests as r
+ON r.productno=p.productno
+GROUP BY productfinish;
+
+-- 44. List quantity on hand and quantity ordered for every product
+SELECT p.productno, productdesc, qtyonhand, COALESCE(SUM(r.quantity),0) AS qty_ordered
+FROM product p
+LEFT JOIN requests r
+ON p.productno=r.productno
+GROUP BY p.productno, productdesc, qtyonhand;
+
+SELECT p.productno,productdesc, qtyonhand, SUM(r.quantity) AS qty_ordered
+FROM product p, requests r
+WHERE p.productno=r.productno
+GROUP BY p.productno, p.productdesc, p.qtyonhand
+UNION
+SELECT p1.productno, productdesc, qtyonhand, 0 AS qty_ordered
+FROM product p1, requests
+WHERE p1.productno NOT IN(
+    SELECT DISTINCT productno
+    FROM requests
+);
+
+-- 45. List the product nos along with total ordered quantity for those products whose 
+-- total ordered quantity is more than qty on hand.
+
+SELECT p.productno, productdesc, qtyonhand, SUM(r.quantity) AS total_qty_ordered
+FROM product p INNER JOIN requests r
+ON p.productno=r.productno
+GROUP BY p.productno, productdesc, qtyonhand
+HAVING total_qty_ordered>qtyonhand;
+
+SELECT p.productno, qtyonhand, SUM(r.quantity) AS total_qty_ordered
+FROM product p, requests r
+WHERE p.productno=r.productno
+GROUP BY p.productno, qtyonhand
+HAVING total_qty_ordered>qtyonhand;
+
+-- 46. List the product nos along with total ordered quantity and qty on
+-- hand for those products whose total ordered quantity is more than qty on hand.
+
+#same as above(I've actually included qtyonhand as well)
