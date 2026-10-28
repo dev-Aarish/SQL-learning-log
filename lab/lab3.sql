@@ -29,6 +29,7 @@ WHERE unitprice=(
     ORDER BY unitprice DESC
     LIMIT 1,1
 );
+#syntax for limit is LIMIT offset, rowcount
 
 SELECT *
 FROM product
@@ -125,6 +126,7 @@ HAVING COUNT(*)>= ALL(
     FROM product
     GROUP BY productfinish
 );
+#note: >=ALL == MAX
 
 -- 28. Find the finish with the lowest total inventory value
 SELECT productfinish, SUM(qtyonhand*unitprice) AS inventory_value
