@@ -48,6 +48,14 @@ WHERE customerid=(
     WHERE customername='Value Furniture'
 );
 
+SELECT orderdate
+FROM orders AS o
+WHERE EXISTS(
+    SELECT *
+    FROM customer AS c
+    WHERE c.customerid=o.customerid AND c.customername='Value Furniture'
+);
+
 -- 41. List every order which includes a request for a product made of "Oak"
 SELECT o.*
 FROM orders AS o
@@ -61,14 +69,49 @@ WHERE o.orderno IN(
     )
 );
 
-SELECT o.*
+SELECT DISTINCT o.*
 FROM orders AS o, requests AS r, product AS p
 WHERE p.productfinish='Oak' AND r.productno=p.productno AND o.orderno=r.orderno;
 
--- 42. List every order which includes request only for products made of "Oak"
-SELECT orderno
-FROM requests AS r, product AS p
-WHERE p.productfinish="Oak" AND r.productno=p.productno;
-
 SELECT *
-FROM requests;
+FROM orders AS o
+WHERE EXISTS(
+    SELECT *
+    FROM requests AS r
+    WHERE r.orderno=o.orderno AND r.productno IN(
+        SELECT productno
+        FROM product
+        WHERE productfinish='Oak'
+    )
+);
+
+SELECT DISTINCT o.*
+FROM orders AS o
+JOIN requests AS r
+    ON r.orderno=o.orderno
+JOIN product AS p
+    ON p.productno=r.productno
+WHERE productfinish='Oak';
+#DISTINCT is needed because an order can contain multiple products of Oak
+#which would lead to satisfying the condition that many times.
+
+-- 42. List every order which includes request only for products made of "Oak"
+
+SELECT orderno
+FROM requests
+EXCEPT
+SELECT DISTINCT orderno
+FROM requests AS r, product AS p
+WHERE r.productno=p.productno AND p.productfinish<>'Oak';
+
+SELECT DISTINCT o.*
+FROM orders AS o, requests AS r1
+WHERE o.orderno=r1.orderno
+AND NOT EXISTS(
+    SELECT *
+    FROM requests AS r2, product AS p
+    WHERE r2.orderno=o.orderno
+    AND r2.productno=p.productno
+    AND p.productfinish<>'Oak'
+);
+#Sir's way of doing it apparently
