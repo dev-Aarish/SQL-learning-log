@@ -178,3 +178,12 @@ AND NOT EXISTS(
 AND c1.customername<>'Contemporary Casuals';
 
 -- 56. Find customers who ordered both oak and birch products
+
+SELECT c.customerid, c.customername
+FROM customer c
+JOIN orders o ON o.customerid=c.customerid
+JOIN requests r ON o.orderno=r.orderno
+JOIN product p ON p.productno=r.productno
+WHERE p.productfinish IN ('Oak','Birch')
+GROUP BY c.customerid, c.customername
+HAVING COUNT(DISTINCT p.productfinish)=2;
